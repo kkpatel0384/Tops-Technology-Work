@@ -1,1 +1,67 @@
+# QUE : 1 --> Create a Python script using NumPy to implement a perceptron that learns to classify whether a Flipkart product review is 'positive' (1)
+or 'negative' (0) based on two features: review length and number of exclamation marks. Use a small manually created dataset for training.
 
+
+import numpy as np
+
+X = np.array([
+    [80, 5],    # Positive
+    [70, 4],    # Positive
+    [90, 6],    # Positive
+    [20, 0],    # Negative
+    [30, 1],    # Negative
+    [25, 0],    # Negative
+    [60, 3],    # Positive
+    [15, 0]     # Negative
+])
+
+y = np.array([1, 1, 1, 0, 0, 0, 1, 0])
+
+X = X / np.max(X, axis=0)
+
+
+weights = np.zeros(X.shape[1])
+bias = 0
+learning_rate = 0.1
+epochs = 20
+
+
+for epoch in range(epochs):
+
+    for i in range(len(X)):
+
+        linear_output = np.dot(X[i], weights) + bias
+
+        prediction = 1 if linear_output >= 0 else 0
+
+        error = y[i] - prediction
+
+        weights += learning_rate * error * X[i]
+        bias += learning_rate * error
+
+
+print("Final Weights:", weights)
+print("Final Bias:", bias)
+
+
+test_reviews = np.array([
+    [85, 5],   # Expected Positive
+    [22, 0],   # Expected Negative
+    [65, 4],   # Expected Positive
+    [18, 0]    # Expected Negative
+])
+
+test_reviews = test_reviews / np.max(X * np.max(X, axis=0), axis=0)
+
+print("\nPredictions:")
+
+for review in test_reviews:
+
+    output = np.dot(review, weights) + bias
+
+    prediction = 1 if output >= 0 else 0
+
+    if prediction == 1:
+        print("Positive Review")
+    else:
+        print("Negative Review")
